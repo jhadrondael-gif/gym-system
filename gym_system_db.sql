@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Apr 03, 2026 at 09:28 AM
+-- Generation Time: Apr 03, 2026 at 09:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,31 @@ SET time_zone = "+00:00";
 --
 -- Database: `gym_system_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `members`
+--
+
+CREATE TABLE `members` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `gender` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  `birthdate` date NOT NULL,
+  `contact_number` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `members`
+--
+
+INSERT INTO `members` (`id`, `first_name`, `last_name`, `gender`, `role`, `birthdate`, `contact_number`, `email`, `password`) VALUES
+(1, 'Maverick', 'Barrientos', 'Male', 'user', '0000-00-00', '90099', 'maverick@gmail.com', '$2y$10$qpJIT8MsJDedGS.n.wVs9OBShAZo1GX47kBOmh0O6bCmEdrbW2HXK');
 
 -- --------------------------------------------------------
 
@@ -43,6 +68,12 @@ CREATE TABLE `membership` (
 --
 
 --
+-- Indexes for table `members`
+--
+ALTER TABLE `members`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `membership`
 --
 ALTER TABLE `membership`
@@ -52,6 +83,12 @@ ALTER TABLE `membership`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `members`
+--
+ALTER TABLE `members`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `membership`
