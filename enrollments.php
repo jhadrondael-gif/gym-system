@@ -81,7 +81,7 @@
 <div class="sidebar">
     <h4>GYM SYSTEM</h4>
 
-  <a href="*" class="active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+ <a href="*" class="active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
 <a href="member.php"><i data-lucide="users"></i> Members</a>
 <a href="membership.php"><i data-lucide="credit-card"></i> Membership</a>
 <a href="attendance.php"><i data-lucide="calendar-check"></i> Attendance</a>
@@ -93,7 +93,7 @@
 
 <!-- Main Content -->
 <div class="content">
-    <h2>ATTENDANCE</h2>
+    <h2>Enrollments</h2>
     <p>Select an option from the sidebar.</p>
 </div>
 
