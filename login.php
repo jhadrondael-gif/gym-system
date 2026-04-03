@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,9 +75,19 @@
     <div class="login-box">
         <h2>Login</h2>
 
-        <form action="dashboard.php" method="POST">
+        <?php if (isset($_SESSION["error"])): ?>
+            <div class="error">
+                <?php
+                    echo htmlspecialchars($_SESSION["error"]);
+                    unset($_SESSION["error"]);
+                ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="controllers/AuthController.php" method="POST">
+            <input type="hidden" name="action" value="login">
             <div class="input-box">
-                <input type="text" name="username" placeholder="Username" required>
+                <input type="text" name="email" placeholder="Email" required>
             </div>
 
             <div class="input-box">

@@ -1,12 +1,32 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "login";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+class Database {
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    private $username;
+    private $host;
+    private $port;
+    private $database;
+    private $password;
+
+    function __construct()
+    {
+        $this->username = "root";
+        $this->host = "localhost";
+        $this->password = "";
+        $this->port = 3307;
+        $this->database = "gym_system_db";
+    }
+
+    public function connection() {
+
+        $connection = new mysqli($this->host, $this->username, $this->password, $this->database, $this->port);
+
+        if ($connection->connect_error) {
+            die("Connection error" . $connection->connect_error);
+        } else {
+            return $connection;
+        }
+
+    }
+
 }
-?>

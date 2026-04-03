@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +60,9 @@
     <div class="form-container">
         <h2>Gym Registration</h2>
 
-        <form action="login.php" method="POST">
+        <form action="controllers/AuthController.php" method="POST">
+
+            <input type="hidden" name="action" value="register">
 
             <input type="text" name="first_name" placeholder="First Name" required>
 
@@ -69,14 +74,14 @@
                 <option>Female</option>
             </select>
 
-            <select name="role" required>
+            <select name="role">
                 <option value="">Select Role</option>
                 <option value="Admin">Admin</option>
                 <option value="User">User</option>
             </select>
 
 
-            <input type="date" name="date_of_birth" required>
+            <input type="date" name="birthdate" required>
 
             <input type="text" name="contact_number" placeholder="Contact Number" required>
 
