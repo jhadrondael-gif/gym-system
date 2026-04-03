@@ -121,7 +121,6 @@ session_start();
 <div class="bg"></div>
 <div class="overlay"></div>
 
-<<<<<<< HEAD
         <?php if (isset($_SESSION["error"])): ?>
             <div class="error">
                 <?php
@@ -131,40 +130,30 @@ session_start();
             </div>
         <?php endif; ?>
 
-        <form action="controllers/AuthController.php" method="POST">
-            <input type="hidden" name="action" value="login">
-            <div class="input-box">
-                <input type="text" name="email" placeholder="Email" required>
+        <div class="card">
+            <form action="controllers/AuthController.php" method="POST">
+                <h2>Login</h2>
+
+                <div class="form-group">
+                <input type="hidden" name="action" value="login">
+                <div class="input-box">
+                    <input type="text" name="email" placeholder="Email" required>
+                </div>
+
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i data-lucide="lock"></i>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
             </div>
-=======
-<div class="card">
-  <h2>Login</h2>
->>>>>>> e9b1799d3f32f2662b1ee61a52a4adffef41e0b8
 
-  <form id="loginForm" action="dashboard.php">
-    <div class="form-group">
-      <label>Username</label>
-      <div class="input-wrapper">
-        <i data-lucide="user"></i>
-        <input type="text" id="username" placeholder="Enter your username" required>
-      </div>
+            <div class="actions">
+            <a href="#">Register</a>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
     </div>
-
-    <div class="form-group">
-      <label>Password</label>
-      <div class="input-wrapper">
-        <i data-lucide="lock"></i>
-        <input type="password" id="password" placeholder="••••••••" required>
-      </div>
-    </div>
-
-    <div class="actions">
-      <a href="#">Register</a>
-    </div>
-
-    <button type="submit">Login</button>
-  </form>
-</div>
 
 
 
