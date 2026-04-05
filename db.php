@@ -13,7 +13,7 @@ class Database {
         $this->username = "root";
         $this->host = "localhost";
         $this->password = "";
-        $this->port = 3306;
+        $this->port = 3307;
         $this->database = "gym_system_db";
     }
 
