@@ -239,17 +239,10 @@ session_start();
                 <label>Date of Birth</label>
                 <div class="input-wrap">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <input type="date" name="date_of_birth" required>
+                    <input type="date" name="birthdate" required>
                 </div>
             </div>
 
-<<<<<<< HEAD
-            <select name="role">
-                <option value="">Select Role</option>
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
-            </select>
-=======
             <div class="field-group">
                 <label>Contact Number</label>
                 <div class="input-wrap">
@@ -257,7 +250,6 @@ session_start();
                     <input type="text" name="contact_number" placeholder="Contact number" required>
                 </div>
             </div>
->>>>>>> e9b1799d3f32f2662b1ee61a52a4adffef41e0b8
 
             <div class="field-group">
                 <label>Email</label>
@@ -267,17 +259,6 @@ session_start();
                 </div>
             </div>
 
-<<<<<<< HEAD
-            <input type="date" name="birthdate" required>
-
-            <input type="text" name="contact_number" placeholder="Contact Number" required>
-
-            <input type="email" name="email" placeholder="Email" required>
-
-            <input type="password" name="password" placeholder="Password" required>
-
-            <input type="password" name="Confirm_password" placeholder="Confirm_Password" required>
-=======
             <div class="row">
                 <div class="field-group">
                     <label>Password</label>
@@ -294,7 +275,6 @@ session_start();
                     </div>
                 </div>
             </div>
->>>>>>> e9b1799d3f32f2662b1ee61a52a4adffef41e0b8
 
             <div class="register-link">
                 <a href="login.php">Already have an account? Login</a>

@@ -40,22 +40,15 @@ function handleLogin($database) {
     if ($result->num_rows==1) {
         $row =  $result->fetch_assoc();
 
-        if (password_verify($password, $row["password"])) {
-            $_SESSION["user"] = $row["email"];
-            $_SESSION["user_id"] = $row["id"];
-            header("Location: ../dashboard.php");
-            exit();
-        } else {
-            $error = "Invalid email or password";
-            header("Location: login.php");
-            exit();
-        }
+        $_SESSION["user"] = $row["email"];
+        $_SESSION["user_id"] = $row["id"];
+
     } else {
+        echo($error);
         $error = "Invalid email or password";
-        header("Location: login.php");
+        header("Location: ../login.php");
         exit();
     }
-
 }
 
 function handleRegister($database) {
@@ -70,7 +63,8 @@ function handleRegister($database) {
     $password = $_POST["password"];
 
     $connection = $database->connection();
-
+   if (password_verify($password, $row["password"])) {
+            $
     $stmt = $connection->prepare("SELECT id FROM members WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -102,4 +96,5 @@ function handleRegister($database) {
     $stmt->close();
     $connection->close();
 
+}
 }
