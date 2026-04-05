@@ -93,7 +93,7 @@
 <!-- Main Content -->
 <div class="content">
     <h2>Welcome to Dashboard</h2>
-    <p>Select an option from the sidebar.</p>
+    
 
     <div class="card">
         <p>This is your dashboard content area.</p>

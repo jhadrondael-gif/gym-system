@@ -94,7 +94,7 @@
 <!-- Main Content -->
 <div class="content">
     <h2>Classes</h2>
-    <p>Select an option from the sidebar.</p>
+
 </div>
 
 </body>

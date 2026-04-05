@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/lucide@latest"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>             
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Gym Sidebar</title>
     <style>
@@ -136,19 +136,19 @@
 <!-- Sidebar -->
 <div class="sidebar">
     <h4>GYM SYSTEM</h4>
-    <a href="#"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-    <a href="member.php" class="active"><i data-lucide="users"></i> Members</a>
+   <a href="#" class="active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+    <a href="member.php"><i data-lucide="users"></i> Members</a>
     <a href="membership.php"><i data-lucide="credit-card"></i> Membership</a>
     <a href="attendance.php"><i data-lucide="calendar-check"></i> Attendance</a>
     <a href="classes.php"><i data-lucide="bar-chart-3"></i> Classes</a>
-    <a href="enrollment.php"><i data-lucide="settings"></i> Enrollments</a>
+    <a href="enrollments.php"><i data-lucide="settings"></i> Enrollments</a>
     <a href="login.php"><i data-lucide="log-out"></i> Logout</a>
 </div>
 
 <!-- Main Content -->
 <div class="content">
     <h2>MEMBER</h2>
-    <p>Select an option from the sidebar.</p>
+    
 
     <div class="card">
         <div class="table-responsive">

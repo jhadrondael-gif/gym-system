@@ -152,7 +152,6 @@
 <!-- Main Content -->
 <div class="content">
     <h2>MEMBERSHIP</h2>
-    <p>Select an option from the sidebar.</p>
 
     <div class="card">
         <div class="table-responsive">
