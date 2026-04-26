@@ -244,30 +244,17 @@ unset($_SESSION["success"], $_SESSION["error"]);
 <!-- Sidebar -->
 <div class="sidebar">
     <h4>GYM SYSTEM</h4>
-<<<<<<< HEAD
-   <a href="#" class="active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-    <a href="member.php"><i data-lucide="users"></i> Members</a>
-=======
     <a href="dashboard.php"><i data-lucide="layout-dashboard"></i> Dashboard</a>
     <a href="member.php" class="active"><i data-lucide="users"></i> Members</a>
->>>>>>> cb2fcb3e9e720e9cb5b5fcf94bd090df8257168c
     <a href="membership.php"><i data-lucide="credit-card"></i> Membership</a>
     <a href="attendance.php"><i data-lucide="calendar-check"></i> Attendance</a>
     <a href="classes.php"><i data-lucide="bar-chart-3"></i> Classes</a>
     <a href="enrollments.php"><i data-lucide="settings"></i> Enrollments</a>
-<<<<<<< HEAD
-    <a href="login.php"><i data-lucide="log-out"></i> Logout</a>
-=======
     <a href="./controllers/Logout.php"><i data-lucide="log-out"></i> Logout</a>
->>>>>>> cb2fcb3e9e720e9cb5b5fcf94bd090df8257168c
 </div>
 
 <!-- Main Content -->
 <div class="content">
-<<<<<<< HEAD
-    <h2>MEMBER</h2>
-    
-=======
 
     <div class="d-flex justify-content-between align-items-center">
         <h2>MEMBERS</h2>
@@ -276,7 +263,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
         </button>
     </div>
     <p>Select an option from the sidebar.</p>
->>>>>>> cb2fcb3e9e720e9cb5b5fcf94bd090df8257168c
 
     <?php if ($success): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">

@@ -372,10 +372,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
 
 <!-- Main Content -->
 <div class="content">
-<<<<<<< HEAD
-    <h2>Classes</h2>
-
-=======
 
     <div class="d-flex justify-content-between align-items-center">
         <div>
@@ -487,7 +483,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
         </div>
 
     </div>
->>>>>>> cb2fcb3e9e720e9cb5b5fcf94bd090df8257168c
 </div>
 
 <!-- Create Class Modal -->

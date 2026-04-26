@@ -2,7 +2,7 @@
 require_once("./controllers/AdminController/get-memberships.php");
 $memberships = $response["data"] ?? [];
 
-// Also fetch members list for the dropdown
+
 require_once("./controllers/AdminController/get-members.php");
 $members = $response["data"] ?? [];
 
@@ -267,9 +267,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
 
 <!-- Main Content -->
 <div class="content">
-<<<<<<< HEAD
-    <h2>MEMBERSHIP</h2>
-=======
 
     <div class="d-flex justify-content-between align-items-center">
         <h2>MEMBERSHIP</h2>
@@ -278,7 +275,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
         </button>
     </div>
     <p>Select an option from the sidebar.</p>
->>>>>>> cb2fcb3e9e720e9cb5b5fcf94bd090df8257168c
 
     <?php if ($success): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
