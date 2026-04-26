@@ -201,6 +201,8 @@ select option {
   color: var(--yellow);
   text-decoration: none;
 }
+
+
   </style>
 </head>
 
@@ -209,15 +211,7 @@ select option {
 <div class="bg"></div>
 <div class="overlay"></div>
 
-        <?php if (isset($_SESSION["error"])): ?>
-            <div class="error">
-                <?php
-                    echo htmlspecialchars($_SESSION["error"]);
-                    unset($_SESSION["error"]);
-                ?>
-            </div>
-        <?php endif; ?>
-
+       
         <div class="card">
             <form action="controllers/AuthController.php" method="POST">
                 <h2>Login</h2>
@@ -241,6 +235,16 @@ select option {
               <button class="btn" type="submit">Login</button>
             </div>
         </form>
+         <div class="card">
+        <?php if (isset($_SESSION["error"])): ?>
+            <div class="error">
+                <?php
+                    echo htmlspecialchars($_SESSION["error"]);
+                    unset($_SESSION["error"]);
+                ?>
+            </div>
+        <?php endif; ?>
+
     </div>
 
 

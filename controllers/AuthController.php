@@ -5,17 +5,17 @@ require("../db.php");
 $database = new Database();
 session_unset();
 
-if ($row["role"] === "admin") {
-    $_SESSION["admin"]    = $row["email"];
-    $_SESSION["admin_id"] = $row["id"];
-    header("Location: ../dashboard.php");
-    exit();
-} elseif ($row["role"] === "user") {
-    $_SESSION["user"]    = $row["email"];
-    $_SESSION["user_id"] = $row["id"];
-    header("Location: ../views/users/user-dashboard.php");
-    exit();
-}
+// if ($row["role"] === "admin") {
+//     $_SESSION["admin"]    = $row["email"];
+//     $_SESSION["admin_id"] = $row["id"];
+//     header("Location: ../dashboard.php");
+//     exit();
+// } elseif ($row["role"] === "user") {
+//     $_SESSION["user"]    = $row["email"];
+//     $_SESSION["user_id"] = $row["id"];
+//     header("Location: ../views/users/user-dashboard.php");
+//     exit();
+// }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -99,7 +99,7 @@ function handleRegister($database) {
         $_SESSION["error"] = "Email is already registered.";
         $stmt->close();
         $connection->close();
-        header("Location: ../register.php");
+        header("Location: ../registration.php");
         exit();
     }
 
@@ -120,7 +120,7 @@ function handleRegister($database) {
         $_SESSION["error"] = "Registration failed. Please try again.";
         $stmt->close();
         $connection->close();
-        header("Location: ../register.php");
+        header("Location: ../registration.php");
         exit();
     }
 }

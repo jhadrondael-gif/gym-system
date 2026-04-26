@@ -2,7 +2,7 @@
 require_once("./controllers/AdminController/get-memberships.php");
 $memberships = $response["data"] ?? [];
 
-// Also fetch members list for the dropdown
+
 require_once("./controllers/AdminController/get-members.php");
 $members = $response["data"] ?? [];
 
