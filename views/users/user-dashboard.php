@@ -18,7 +18,9 @@
             color: #fff;
         }
 
-        /* ── Sidebar ── */
+        /* ─────────────────────────────────────────
+           SIDEBAR
+        ───────────────────────────────────────── */
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -28,6 +30,8 @@
             top: 0; left: 0;
             display: flex;
             flex-direction: column;
+            z-index: 1040;
+            transition: transform 0.3s ease;
         }
         .sidebar h4 {
             text-align: center;
@@ -45,16 +49,83 @@
             gap: 10px;
             padding: 14px 20px;
             transition: 0.3s;
+            font-size: 14px;
         }
         .sidebar a svg { width: 16px; height: 16px; flex-shrink: 0; }
-        .sidebar a:hover { background: #ffd700; color: #000; padding-left: 25px; }
+        .sidebar a:hover  { background: #ffd700; color: #000; padding-left: 25px; }
         .sidebar a.active { background: #ffd700; color: #000; }
-        .sidebar .spacer { flex: 1; }
+        .sidebar .spacer  { flex: 1; }
 
-        /* ── Content ── */
-        .content { margin-left: 250px; padding: 30px 30px 48px; }
+        /* Sidebar hidden on mobile */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0,0,0,0.7);
+            }
+        }
 
-        /* ── Welcome banner ── */
+        /* Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1039;
+        }
+        .sidebar-overlay.show { display: block; }
+
+        /* ─────────────────────────────────────────
+           TOPBAR (mobile only)
+        ───────────────────────────────────────── */
+        .topbar {
+            display: none;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            background: #0a0a0a;
+            border-bottom: 2px solid #ffd700;
+            padding: 12px 16px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-title {
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .burger {
+            background: none;
+            border: none;
+            color: #ffd700;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .burger svg { width: 22px; height: 22px; }
+
+        @media (max-width: 991px) {
+            .topbar { display: flex; }
+        }
+
+        /* ─────────────────────────────────────────
+           CONTENT
+        ───────────────────────────────────────── */
+        .content {
+            margin-left: 250px;
+            padding: 30px 30px 48px;
+            transition: margin-left 0.3s;
+        }
+        @media (max-width: 991px) {
+            .content { margin-left: 0; padding: 20px 16px 48px; }
+        }
+
+        /* ─────────────────────────────────────────
+           WELCOME BANNER
+        ───────────────────────────────────────── */
         .welcome-banner {
             background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
             border: 1px solid #ffd70033;
@@ -82,14 +153,23 @@
             font-size: 18px; font-weight: 600; color: #ffd700;
             flex-shrink: 0;
         }
+        @media (max-width: 575px) {
+            .welcome-banner { padding: 16px; }
+            .welcome-left h2 { font-size: 16px; }
+        }
 
-        /* ── Stat Cards ── */
+        /* ─────────────────────────────────────────
+           STAT CARDS
+        ───────────────────────────────────────── */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 14px;
             margin-bottom: 22px;
         }
+        @media (max-width: 1199px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 575px)  { .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; } }
+
         .stat-card {
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
@@ -104,22 +184,29 @@
             top: 0; left: 0; right: 0;
             height: 3px;
         }
-        .stat-card.gold::before  { background: #ffd700; }
-        .stat-card.green::before { background: #22c55e; }
-        .stat-card.blue::before  { background: #3b82f6; }
-        .stat-card.red::before   { background: #ef4444; }
-        .stat-card.orange::before{ background: #f97316; }
+        .stat-card.gold::before   { background: #ffd700; }
+        .stat-card.green::before  { background: #22c55e; }
+        .stat-card.blue::before   { background: #3b82f6; }
+        .stat-card.red::before    { background: #ef4444; }
+        .stat-card.orange::before { background: #f97316; }
 
         .stat-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
         .stat-value { font-size: 26px; font-weight: 600; color: #fff; }
         .stat-sub   { font-size: 11px; color: #555; margin-top: 4px; }
-        .stat-sub .up   { color: #22c55e; }
-        .stat-sub .warn { color: #f59e0b; }
+        .stat-sub .up     { color: #22c55e; }
+        .stat-sub .warn   { color: #f59e0b; }
         .stat-sub .danger { color: #ef4444; }
         .stat-icon { position: absolute; right: 14px; top: 16px; opacity: .1; }
         .stat-icon svg { width: 38px; height: 38px; stroke: #ffd700; }
 
-        /* ── Cards ── */
+        @media (max-width: 575px) {
+            .stat-value { font-size: 20px; }
+            .stat-icon  { display: none; }
+        }
+
+        /* ─────────────────────────────────────────
+           CARDS
+        ───────────────────────────────────────── */
         .card {
             background: #1a1a1a;
             border: 1px solid #ffd700;
@@ -130,33 +217,47 @@
             display: flex; align-items: center;
             justify-content: space-between;
             margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .card-title { font-size: 14px; font-weight: 600; color: #fff; }
-        .badge-pill { font-size: 11px; padding: 3px 10px; border-radius: 20px; }
+        .badge-pill { font-size: 11px; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
         .badge-gold   { background: #2a2200; color: #ffd700; border: 1px solid #ffd70033; }
         .badge-green  { background: #052010; color: #22c55e; border: 1px solid #22c55e33; }
         .badge-blue   { background: #051020; color: #3b82f6; border: 1px solid #3b82f633; }
         .badge-yellow { background: #2a1f00; color: #f59e0b; border: 1px solid #f59e0b33; }
         .badge-red    { background: #2a0a0a; color: #ef4444; border: 1px solid #ef444433; }
 
-        /* ── Grid layouts ── */
-        .grid-2   { display: grid; grid-template-columns: 1fr 1fr;   gap: 16px; margin-bottom: 16px; }
-        .grid-3   { display: grid; grid-template-columns: 2fr 1fr;   gap: 16px; margin-bottom: 16px; }
+        /* ─────────────────────────────────────────
+           GRID LAYOUTS
+        ───────────────────────────────────────── */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 991px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
 
-        /* ── Chart ── */
+        /* ─────────────────────────────────────────
+           CHART
+        ───────────────────────────────────────── */
         .chart-wrap { position: relative; width: 100%; height: 180px; }
 
-        /* ── Membership card ── */
-        .membership-detail {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .mem-type {
-            font-size: 22px;
-            font-weight: 600;
-            color: #ffd700;
-        }
+        /* ─────────────────────────────────────────
+           MEMBERSHIP DETAIL
+        ───────────────────────────────────────── */
+        .membership-detail { display: flex; flex-direction: column; gap: 10px; }
+        .mem-type { font-size: 22px; font-weight: 600; color: #ffd700; }
         .mem-row {
             display: flex;
             align-items: center;
@@ -169,26 +270,19 @@
         .mem-row:last-child { border-bottom: none; }
         .mem-row .mem-val { color: #ddd; font-weight: 500; }
         .days-left-bar {
-            height: 6px;
-            background: #2a2a2a;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 4px;
+            height: 6px; background: #2a2a2a;
+            border-radius: 4px; overflow: hidden; margin-top: 4px;
         }
-        .days-left-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.4s;
-        }
+        .days-left-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
         .no-membership {
-            text-align: center;
-            padding: 20px 0;
-            color: #444;
-            font-size: 13px;
+            text-align: center; padding: 20px 0;
+            color: #444; font-size: 13px;
         }
-        .no-membership svg { width: 32px; height: 32px; margin-bottom: 8px; opacity: .3; display: block; margin: 0 auto 8px; }
+        .no-membership svg { width: 32px; height: 32px; margin: 0 auto 8px; opacity: .3; display: block; }
 
-        /* ── Enrolled classes ── */
+        /* ─────────────────────────────────────────
+           ENROLLED CLASSES
+        ───────────────────────────────────────── */
         .class-list { display: flex; flex-direction: column; gap: 8px; }
         .class-row {
             display: flex; align-items: center; gap: 10px;
@@ -196,25 +290,29 @@
             background: #141414;
             border-radius: 8px;
             border: 1px solid #222;
+            flex-wrap: wrap;
         }
         .class-row.enrolled-row { border-color: #22c55e22; }
         .class-row.pending-row  { border-color: #f59e0b22; }
         .class-time  { font-size: 11px; color: #ffd700; min-width: 52px; font-weight: 600; }
-        .class-info  { flex: 1; }
-        .class-name  { font-size: 13px; color: #ddd; font-weight: 500; }
+        .class-info  { flex: 1; min-width: 0; }
+        .class-name  { font-size: 13px; color: #ddd; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .class-meta-text { font-size: 11px; color: #555; }
         .enroll-pill { font-size: 10px; padding: 2px 8px; border-radius: 12px; white-space: nowrap; }
         .pill-approved { background: #052010; color: #22c55e; }
         .pill-pending  { background: #2a1f00; color: #f59e0b; }
         .no-classes { text-align: center; padding: 20px 0; color: #444; font-size: 13px; }
 
-        /* ── Attendance table ── */
+        /* ─────────────────────────────────────────
+           ATTENDANCE TABLE
+        ───────────────────────────────────────── */
         .table {
             width: 100%;
             border-collapse: collapse;
             color: #fff;
             border: 1px solid #ffd700;
             margin-bottom: 0;
+            font-size: 12px;
         }
         .table thead { background: #ffd700; color: #000; }
         .table thead th {
@@ -222,24 +320,40 @@
             font-size: 12px; border-right: 1px solid #000; border-bottom: none;
         }
         .table thead th:last-child { border-right: none; }
-        .table tbody tr { border-bottom: 1px solid #ffd700; background: #000 !important; }
-        .table tbody td {
+        .table tbody tr  { border-bottom: 1px solid #ffd700; background: #000 !important; }
+        .table tbody td  {
             padding: 8px 10px; font-size: 12px; vertical-align: middle;
             border-right: 1px solid #ffd700; color: #fff; background: #000 !important;
         }
         .table tbody td:last-child { border-right: none; }
-        .table tbody tr:hover td { background: #1a1a1a !important; }
+        .table tbody tr:hover td   { background: #1a1a1a !important; }
         .empty-row td { text-align: center; color: #555; padding: 20px; }
 
-        .badge-in  { background: #052010; color: #22c55e; border: 1px solid #22c55e44; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
-        .badge-out { background: #1f1f1f; color: #888;    border: 1px solid #33333344; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+        .badge-in  { background: #052010; color: #22c55e; border: 1px solid #22c55e44; padding: 3px 10px; border-radius: 20px; font-size: 11px; white-space: nowrap; }
+        .badge-out { background: #1f1f1f; color: #888;    border: 1px solid #33333344; padding: 3px 10px; border-radius: 20px; font-size: 11px; white-space: nowrap; }
         .duration-text { font-size: 11px; color: #aaa; }
+
+        /* Hide Duration column on small screens to save space */
+        @media (max-width: 480px) {
+            .col-duration { display: none; }
+        }
     </style>
 </head>
 <body>
 
+<!-- Overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- Topbar (mobile) -->
+<div class="topbar">
+    <span class="topbar-title">GYM SYSTEM</span>
+    <button class="burger" onclick="openSidebar()" aria-label="Open menu">
+        <i data-lucide="menu"></i>
+    </button>
+</div>
+
 <!-- Sidebar -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
     <h4>GYM SYSTEM</h4>
     <a href="user-dashboard.php" class="active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
     <a href="user-membership.php"><i data-lucide="credit-card"></i> Membership</a>
@@ -265,7 +379,6 @@
 
     <!-- Stat Cards -->
     <div class="stats-grid">
-        <!-- Membership status -->
         <div class="stat-card gold">
             <div class="stat-label">Membership</div>
             <div class="stat-value"><?= $membership ? htmlspecialchars($membership['type']) : '—' ?></div>
@@ -279,7 +392,6 @@
             <div class="stat-icon"><i data-lucide="credit-card"></i></div>
         </div>
 
-        <!-- Days left -->
         <div class="stat-card <?= ($days_left !== null && $days_left <= 7) ? 'red' : 'green' ?>">
             <div class="stat-label">Days Left</div>
             <div class="stat-value"><?= $days_left !== null ? $days_left : '—' ?></div>
@@ -297,7 +409,6 @@
             <div class="stat-icon"><i data-lucide="calendar"></i></div>
         </div>
 
-        <!-- Total check-ins -->
         <div class="stat-card blue">
             <div class="stat-label">Total Check-ins</div>
             <div class="stat-value"><?= $total_checkins ?></div>
@@ -305,7 +416,6 @@
             <div class="stat-icon"><i data-lucide="calendar-check"></i></div>
         </div>
 
-        <!-- This month -->
         <div class="stat-card orange">
             <div class="stat-label">This Month</div>
             <div class="stat-value"><?= $checkins_this_month ?></div>
@@ -387,9 +497,9 @@
                 <div class="class-list">
                     <?php foreach ($enrolled_classes as $ec): ?>
                         <?php
-                            $row_class = $ec['enrollment_status'] === 'approved' ? 'enrolled-row' : 'pending-row';
+                            $row_class  = $ec['enrollment_status'] === 'approved' ? 'enrolled-row' : 'pending-row';
                             $pill_class = $ec['enrollment_status'] === 'approved' ? 'pill-approved' : 'pill-pending';
-                            $pill_label = $ec['enrollment_status'] === 'approved' ? 'Enrolled' : 'Pending';
+                            $pill_label = $ec['enrollment_status'] === 'approved' ? 'Enrolled'   : 'Pending';
                         ?>
                         <div class="class-row <?= $row_class ?>">
                             <div class="class-time"><?= date('g:i A', strtotime($ec['time'])) ?></div>
@@ -415,7 +525,7 @@
                         <tr>
                             <th>Date</th>
                             <th>Check-In</th>
-                            <th>Duration</th>
+                            <th class="col-duration">Duration</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -425,13 +535,13 @@
                         <?php else: ?>
                             <?php foreach ($recent_attendance as $log): ?>
                                 <?php
-                                    $dur = duration($log['check_in'], $log['check_out']);
+                                    $dur   = duration($log['check_in'], $log['check_out']);
                                     $is_in = !$log['check_out'];
                                 ?>
                                 <tr>
                                     <td><?= date('M d', strtotime($log['check_in'])) ?></td>
                                     <td><?= date('g:i A', strtotime($log['check_in'])) ?></td>
-                                    <td>
+                                    <td class="col-duration">
                                         <?php if ($dur): ?>
                                             <span class="duration-text"><?= $dur ?></span>
                                         <?php else: ?>
@@ -454,12 +564,23 @@
         </div>
     </div>
 
-</div>
+</div><!-- /.content -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     lucide.createIcons();
 
+    /* ── Sidebar toggle ─────────────────────── */
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebarOverlay').classList.add('show');
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+    }
+
+    /* ── Chart ──────────────────────────────── */
     new Chart(document.getElementById('attendanceChart'), {
         type: 'bar',
         data: {

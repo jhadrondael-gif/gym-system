@@ -27,6 +27,8 @@
             top: 0; left: 0;
             display: flex;
             flex-direction: column;
+            z-index: 1040;
+            transition: transform 0.3s ease;
         }
         .sidebar h4 {
             text-align: center;
@@ -49,6 +51,46 @@
         .sidebar a:hover { background: #ffd700; color: #000; padding-left: 25px; }
         .sidebar a.active { background: #ffd700; color: #000; }
         .sidebar .spacer { flex: 1; }
+
+        /* ── Mobile top bar ── */
+        .topbar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 56px;
+            background: #0a0a0a;
+            border-bottom: 2px solid #ffd700;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 1035;
+        }
+        .topbar-title {
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+        .topbar-toggle {
+            background: none;
+            border: none;
+            color: #ffd700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 4px;
+        }
+        .topbar-toggle svg { width: 22px; height: 22px; }
+
+        /* Sidebar overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1039;
+        }
+        .sidebar-overlay.active { display: block; }
 
         /* ── Content ── */
         .content { margin-left: 250px; padding: 30px 30px 48px; }
@@ -306,12 +348,116 @@
         }
         .no-membership svg { width: 40px; height: 40px; margin-bottom: 10px; opacity: .3; }
         .no-membership p { font-size: 13px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .topbar { display: flex; }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 80px 16px 48px;
+            }
+
+            .active-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 18px 16px;
+                gap: 14px;
+            }
+            .active-banner-right {
+                align-items: flex-start;
+                width: 100%;
+            }
+            .days-bar-wrap { width: 100%; }
+
+            .active-plan-type { font-size: 22px; }
+            .active-plan-meta { flex-direction: column; gap: 6px; }
+
+            .pending-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 14px 16px;
+                gap: 12px;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table thead th,
+            .table tbody td {
+                font-size: 11px;
+                padding: 6px 8px;
+            }
+
+            /* Stack history table on very small screens */
+            .table-stack thead { display: none; }
+            .table-stack tbody tr {
+                display: block;
+                border: 1px solid #ffd70033;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                padding: 10px 12px;
+                background: #0a0a0a !important;
+            }
+            .table-stack tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border: none !important;
+                padding: 5px 0;
+                font-size: 12px;
+                background: transparent !important;
+            }
+            .table-stack tbody td::before {
+                content: attr(data-label);
+                color: #555;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 10px;
+                letter-spacing: 0.5px;
+                flex-shrink: 0;
+                margin-right: 8px;
+            }
+            .table-stack tbody tr:hover td { background: transparent !important; }
+            .table-stack .empty-row {
+                display: table-row;
+            }
+            .table-stack .empty-row td {
+                display: table-cell;
+            }
+
+            .modal-dialog { margin: 16px; }
+        }
+
+        @media (max-width: 400px) {
+            .content h2 { font-size: 20px; }
+            .plan-price { font-size: 24px; }
+        }
     </style>
 </head>
 <body>
 
+<!-- Mobile Top Bar -->
+<div class="topbar">
+    <span class="topbar-title">GYM SYSTEM</span>
+    <button class="topbar-toggle" id="sidebarToggle" aria-label="Open menu">
+        <i data-lucide="menu"></i>
+    </button>
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <!-- Sidebar -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
     <h4>GYM SYSTEM</h4>
     <a href="user-dashboard.php"><i data-lucide="layout-dashboard"></i> Dashboard</a>
     <a href="user-membership.php" class="active"><i data-lucide="credit-card"></i> Membership</a>
@@ -514,7 +660,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table">
+        <table class="table table-stack">
             <thead>
                 <tr>
                     <th>Type</th>
@@ -530,11 +676,11 @@
                 <?php else: ?>
                     <?php foreach ($memberships as $ms): ?>
                         <tr>
-                            <td><?= htmlspecialchars($ms['type']) ?></td>
-                            <td><?= date('M d, Y', strtotime($ms['start_date'])) ?></td>
-                            <td><?= date('M d, Y', strtotime($ms['end_date'])) ?></td>
-                            <td>₱<?= number_format((float)$ms['fee'], 0) ?></td>
-                            <td>
+                            <td data-label="Type"><?= htmlspecialchars($ms['type']) ?></td>
+                            <td data-label="Start"><?= date('M d, Y', strtotime($ms['start_date'])) ?></td>
+                            <td data-label="End"><?= date('M d, Y', strtotime($ms['end_date'])) ?></td>
+                            <td data-label="Fee">₱<?= number_format((float)$ms['fee'], 0) ?></td>
+                            <td data-label="Status">
                                 <?php $s = strtolower($ms['status']); ?>
                                 <?php if ($s === 'active'): ?>
                                     <span class="badge-active">Active</span>
@@ -621,11 +767,37 @@
 <script>
     lucide.createIcons();
 
+    // ── Mobile sidebar toggle ──
+    const sidebar        = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarToggle  = document.getElementById('sidebarToggle');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    sidebarToggle.addEventListener('click', openSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar when a nav link is tapped on mobile
+    sidebar.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) closeSidebar();
+        });
+    });
+
     // Request modal
     document.getElementById('requestModal').addEventListener('show.bs.modal', function(e) {
         const btn = e.relatedTarget;
-        document.getElementById('req_type').value         = btn.dataset.type;
-        document.getElementById('req_fee').value          = btn.dataset.price;
+        document.getElementById('req_type').value            = btn.dataset.type;
+        document.getElementById('req_fee').value             = btn.dataset.price;
         document.getElementById('req_plan_name').textContent = btn.dataset.type;
 
         // Default start = today, end = +1 month
@@ -641,18 +813,18 @@
         const btn     = e.relatedTarget;
         const context = btn.dataset.context;
 
-        document.getElementById('cancel_id').value            = btn.dataset.id;
+        document.getElementById('cancel_id').value             = btn.dataset.id;
         document.getElementById('cancel_plan_name').textContent = btn.dataset.type;
 
         if (context === 'pending') {
-            document.getElementById('cancel_modal_title').textContent   = 'Withdraw Request';
-            document.getElementById('cancel_submit_btn').textContent    = 'Yes, Withdraw';
-            document.getElementById('cancel_modal_body').innerHTML =
+            document.getElementById('cancel_modal_title').textContent = 'Withdraw Request';
+            document.getElementById('cancel_submit_btn').textContent  = 'Yes, Withdraw';
+            document.getElementById('cancel_modal_body').innerHTML    =
                 'Are you sure you want to withdraw your <strong style="color:#ffd700">' + btn.dataset.type + '</strong> membership request?';
         } else {
-            document.getElementById('cancel_modal_title').textContent   = 'Cancel Membership';
-            document.getElementById('cancel_submit_btn').textContent    = 'Yes, Cancel';
-            document.getElementById('cancel_modal_body').innerHTML =
+            document.getElementById('cancel_modal_title').textContent = 'Cancel Membership';
+            document.getElementById('cancel_submit_btn').textContent  = 'Yes, Cancel';
+            document.getElementById('cancel_modal_body').innerHTML    =
                 'Are you sure you want to cancel your <strong style="color:#ffd700">' + btn.dataset.type + '</strong> membership? This action cannot be undone.';
         }
     });

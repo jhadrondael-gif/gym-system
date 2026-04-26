@@ -14,7 +14,6 @@ $user_id = $_SESSION["user_id"];
 $database = new Database();
 $conn     = $database->connection();
 
-// ── All classes with enrollment state for this user ───────────
 $stmt = $conn->prepare("
     SELECT
         c.id,
@@ -59,7 +58,9 @@ $conn->close();
             color: #fff;
         }
 
-        /* ── Sidebar ── */
+        /* ─────────────────────────────────────────
+           SIDEBAR
+        ───────────────────────────────────────── */
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -69,6 +70,8 @@ $conn->close();
             top: 0; left: 0;
             display: flex;
             flex-direction: column;
+            z-index: 1040;
+            transition: transform 0.3s ease;
         }
         .sidebar h4 {
             text-align: center;
@@ -86,16 +89,65 @@ $conn->close();
             gap: 10px;
             padding: 14px 20px;
             transition: 0.3s;
+            font-size: 14px;
         }
         .sidebar a svg { width: 16px; height: 16px; flex-shrink: 0; }
-        .sidebar a:hover { background: #ffd700; color: #000; padding-left: 25px; }
+        .sidebar a:hover  { background: #ffd700; color: #000; padding-left: 25px; }
         .sidebar a.active { background: #ffd700; color: #000; }
-        .sidebar .spacer { flex: 1; }
+        .sidebar .spacer  { flex: 1; }
 
-        /* ── Content ── */
+        @media (max-width: 991px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0,0,0,0.7);
+            }
+        }
+
+        /* ── Overlay ── */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1039;
+        }
+        .sidebar-overlay.show { display: block; }
+
+        /* ─────────────────────────────────────────
+           TOPBAR (mobile only)
+        ───────────────────────────────────────── */
+        .topbar {
+            display: none;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            background: #0a0a0a;
+            border-bottom: 2px solid #ffd700;
+            padding: 12px 16px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-title { color: #ffd700; font-weight: 600; font-size: 16px; }
+        .burger {
+            background: none; border: none;
+            color: #ffd700; cursor: pointer;
+            padding: 4px; display: flex; align-items: center;
+        }
+        .burger svg { width: 22px; height: 22px; }
+
+        @media (max-width: 991px) { .topbar { display: flex; } }
+
+        /* ─────────────────────────────────────────
+           CONTENT
+        ───────────────────────────────────────── */
         .content { margin-left: 250px; padding: 30px 30px 48px; }
         .content h2 { color: #ffd700; font-weight: 600; margin-bottom: 4px; }
         .subtitle { color: #666; font-size: 13px; margin-bottom: 24px; }
+
+        @media (max-width: 991px) {
+            .content { margin-left: 0; padding: 20px 16px 48px; }
+        }
 
         /* ── Alerts ── */
         .alert { font-size: 13px; border-radius: 8px; margin-bottom: 20px; }
@@ -121,7 +173,11 @@ $conn->close();
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 16px;
         }
+        @media (max-width: 575px) {
+            .classes-grid { grid-template-columns: 1fr; }
+        }
 
+        /* ── Class card ── */
         .class-card {
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
@@ -137,7 +193,6 @@ $conn->close();
         .class-card.is-enrolled { border-color: #22c55e44; }
         .class-card.is-pending  { border-color: #f59e0b44; }
 
-        /* top accent stripe */
         .class-card::before {
             content: '';
             position: absolute;
@@ -155,46 +210,24 @@ $conn->close();
             justify-content: space-between;
             gap: 8px;
         }
-
         .class-card-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            line-height: 1.3;
+            font-size: 16px; font-weight: 600;
+            color: #fff; line-height: 1.3;
         }
 
-        /* status badge */
         .status-badge {
             font-size: 10px; font-weight: 600;
             padding: 3px 9px; border-radius: 12px;
             white-space: nowrap; flex-shrink: 0;
         }
-        .badge-enrolled {
-            background: #052010; color: #22c55e; border: 1px solid #22c55e44;
-        }
-        .badge-pending {
-            background: #2a1f00; color: #f59e0b; border: 1px solid #f59e0b44;
-        }
+        .badge-enrolled { background: #052010; color: #22c55e; border: 1px solid #22c55e44; }
+        .badge-pending  { background: #2a1f00; color: #f59e0b; border: 1px solid #f59e0b44; }
 
-        .class-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            font-size: 12px;
-            color: #666;
-        }
-        .class-meta-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .class-meta { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: #666; }
+        .class-meta-row { display: flex; align-items: center; gap: 6px; }
         .class-meta-row svg { width: 13px; height: 13px; color: #ffd700; flex-shrink: 0; }
 
-        .class-description {
-            font-size: 12px;
-            color: #555;
-            line-height: 1.6;
-        }
+        .class-description { font-size: 12px; color: #555; line-height: 1.6; }
 
         .class-footer {
             display: flex;
@@ -202,77 +235,49 @@ $conn->close();
             justify-content: space-between;
             margin-top: auto;
             gap: 8px;
+            flex-wrap: wrap;
         }
-
         .enrolled-count {
-            font-size: 12px;
-            color: #555;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            font-size: 12px; color: #555;
+            display: flex; align-items: center; gap: 5px;
         }
         .enrolled-count svg { width: 13px; height: 13px; }
 
         /* ── Action buttons ── */
         .btn-enroll {
-            background: #ffd700;
-            color: #000;
-            font-weight: 600;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: 0.2s;
+            background: #ffd700; color: #000; font-weight: 600;
+            border: none; padding: 8px 16px; border-radius: 8px;
+            font-size: 12px; display: inline-flex; align-items: center;
+            gap: 5px; cursor: pointer; transition: 0.2s;
         }
         .btn-enroll svg { width: 13px; height: 13px; }
         .btn-enroll:hover { background: #e6c200; }
 
         .btn-withdraw {
-            background: transparent;
-            color: #f59e0b;
-            border: 1px solid #f59e0b55;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: 0.2s;
+            background: transparent; color: #f59e0b;
+            border: 1px solid #f59e0b55; padding: 8px 14px;
+            border-radius: 8px; font-size: 12px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 5px;
+            cursor: pointer; transition: 0.2s;
         }
         .btn-withdraw svg { width: 13px; height: 13px; }
         .btn-withdraw:hover { background: #f59e0b; color: #000; }
 
         .btn-unenroll {
-            background: transparent;
-            color: #ef4444;
-            border: 1px solid #ef444444;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: 0.2s;
+            background: transparent; color: #ef4444;
+            border: 1px solid #ef444444; padding: 8px 14px;
+            border-radius: 8px; font-size: 12px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 5px;
+            cursor: pointer; transition: 0.2s;
         }
         .btn-unenroll svg { width: 13px; height: 13px; }
         .btn-unenroll:hover { background: #ef4444; color: #fff; }
 
-        /* empty state */
+        /* ── Empty state ── */
         .no-classes {
-            background: #1a1a1a;
-            border: 1px dashed #2a2a2a;
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            color: #444;
+            background: #1a1a1a; border: 1px dashed #2a2a2a;
+            border-radius: 12px; padding: 40px;
+            text-align: center; color: #444;
         }
         .no-classes svg { width: 36px; height: 36px; margin-bottom: 10px; opacity: .3; }
         .no-classes p { font-size: 13px; }
@@ -291,7 +296,8 @@ $conn->close();
 
         .btn-gold {
             background: #ffd700; color: #000; font-weight: 600;
-            border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer;
+            border: none; padding: 8px 18px; border-radius: 8px;
+            font-size: 13px; cursor: pointer;
         }
         .btn-gold:hover { background: #e6c200; color: #000; }
         .btn-secondary-modal {
@@ -308,8 +314,19 @@ $conn->close();
 </head>
 <body>
 
+<!-- Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- Topbar (mobile) -->
+<div class="topbar">
+    <span class="topbar-title">GYM SYSTEM</span>
+    <button class="burger" onclick="openSidebar()" aria-label="Open menu">
+        <i data-lucide="menu"></i>
+    </button>
+</div>
+
 <!-- Sidebar -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
     <h4>GYM SYSTEM</h4>
     <a href="user-dashboard.php"><i data-lucide="layout-dashboard"></i> Dashboard</a>
     <a href="user-membership.php"><i data-lucide="credit-card"></i> Membership</a>
@@ -340,12 +357,12 @@ $conn->close();
         <?php unset($_SESSION["error"]); ?>
     <?php endif; ?>
 
-    <!-- My Enrollments -->
     <?php
         $my_classes = array_filter($classes, fn($c) => !empty($c['enrollment_status']));
-        $available  = array_filter($classes, fn($c) => empty($c['enrollment_status']));
+        $available  = array_filter($classes, fn($c) =>  empty($c['enrollment_status']));
     ?>
 
+    <!-- My Enrollments -->
     <?php if (!empty($my_classes)): ?>
         <div class="section-header">
             <span class="section-label">My Enrollments</span>
@@ -354,7 +371,7 @@ $conn->close();
         <div class="classes-grid">
             <?php foreach ($my_classes as $class): ?>
                 <?php
-                    $status   = strtolower($class['enrollment_status']);
+                    $status    = strtolower($class['enrollment_status']);
                     $cardClass = $status === 'approved' ? 'is-enrolled' : 'is-pending';
                 ?>
                 <div class="class-card <?= $cardClass ?>">
@@ -393,7 +410,6 @@ $conn->close();
                             <i data-lucide="users"></i>
                             <?= $class['enrolled_count'] ?> enrolled
                         </div>
-
                         <?php if ($status === 'pending'): ?>
                             <button class="btn-withdraw"
                                 data-bs-toggle="modal"
@@ -478,7 +494,7 @@ $conn->close();
     <?php endif; ?>
 </div>
 
-<!-- Enroll Confirm Modal -->
+<!-- Enroll Modal -->
 <div class="modal fade" id="enrollModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -529,14 +545,24 @@ $conn->close();
 <script>
     lucide.createIcons();
 
-    // Enroll modal
+    /* ── Sidebar toggle ── */
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebarOverlay').classList.add('show');
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+    }
+
+    /* ── Enroll modal ── */
     document.getElementById("enrollModal").addEventListener("show.bs.modal", function(e) {
         const btn = e.relatedTarget;
-        document.getElementById("enroll_class_id").value        = btn.dataset.classId;
+        document.getElementById("enroll_class_id").value         = btn.dataset.classId;
         document.getElementById("enroll_class_name").textContent = btn.dataset.className;
     });
 
-    // Cancel / Withdraw / Unenroll modal
+    /* ── Cancel / Withdraw / Unenroll modal ── */
     document.getElementById("cancelModal").addEventListener("show.bs.modal", function(e) {
         const btn     = e.relatedTarget;
         const context = btn.dataset.context;

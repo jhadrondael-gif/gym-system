@@ -31,6 +31,46 @@ $member_name = htmlspecialchars($_SESSION["user"]);
             color: #fff;
         }
 
+        /* ── Mobile top bar ── */
+        .topbar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 56px;
+            background: #0a0a0a;
+            border-bottom: 2px solid #ffd700;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 1035;
+        }
+        .topbar-title {
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+        .topbar-toggle {
+            background: none;
+            border: none;
+            color: #ffd700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 4px;
+        }
+        .topbar-toggle svg { width: 22px; height: 22px; }
+
+        /* Sidebar overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1039;
+        }
+        .sidebar-overlay.active { display: block; }
+
         /* ── Sidebar ── */
         .sidebar {
             width: 250px;
@@ -41,6 +81,8 @@ $member_name = htmlspecialchars($_SESSION["user"]);
             top: 0; left: 0;
             display: flex;
             flex-direction: column;
+            z-index: 1040;
+            transition: transform 0.3s ease;
         }
         .sidebar h4 {
             text-align: center;
@@ -76,6 +118,8 @@ $member_name = htmlspecialchars($_SESSION["user"]);
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .page-header h2 {
@@ -102,6 +146,7 @@ $member_name = htmlspecialchars($_SESSION["user"]);
             font-weight: 600;
             cursor: pointer;
             outline: none;
+            flex-shrink: 0;
         }
         .month-select option { background: #1a1a1a; color: #fff; }
 
@@ -333,12 +378,104 @@ $member_name = htmlspecialchars($_SESSION["user"]);
             z-index: 99;
             border: 1px solid #333;
         }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .topbar { display: flex; }
+
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+
+            .content {
+                margin-left: 0;
+                padding: 72px 16px 40px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                margin-bottom: 18px;
+            }
+            .page-header h2 { font-size: 20px; }
+
+            .month-select { width: 100%; }
+
+            /* Stats: 1 col on phones */
+            .stats-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                margin-bottom: 18px;
+            }
+
+            .stat-card { padding: 14px 16px; }
+            .stat-value { font-size: 22px; }
+
+            /* Main grid: single column, calendar first on mobile */
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            /* Show calendar on top on mobile */
+            .main-grid .card:first-child { order: 2; }
+            .main-grid > div:last-child   { order: 1; position: static !important; }
+
+            /* Stack history table as cards */
+            .history-table thead { display: none; }
+            .history-table tbody tr {
+                display: block;
+                border: 1px solid #2a2a2a;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                padding: 10px 12px;
+                background: #111;
+            }
+            .history-table tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border: none;
+                padding: 5px 0;
+                font-size: 12px;
+                background: transparent !important;
+            }
+            .history-table tbody td::before {
+                content: attr(data-label);
+                color: #555;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 10px;
+                letter-spacing: 0.5px;
+                flex-shrink: 0;
+                margin-right: 8px;
+            }
+            .history-table tbody tr:hover td { background: transparent; }
+            .history-table tbody tr:last-child td { border-bottom: none; }
+        }
+
+        @media (min-width: 769px) and (max-width: 1100px) {
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+            .main-grid { grid-template-columns: 1fr; }
+            .main-grid > div:last-child { position: static !important; }
+        }
     </style>
 </head>
 <body>
 
+<!-- Mobile Top Bar -->
+<div class="topbar">
+    <span class="topbar-title">GYM SYSTEM</span>
+    <button class="topbar-toggle" id="sidebarToggle" aria-label="Open menu">
+        <i data-lucide="menu"></i>
+    </button>
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <!-- Sidebar -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
     <h4>GYM SYSTEM</h4>
     <a href="user-dashboard.php"><i data-lucide="layout-dashboard"></i> Dashboard</a>
     <a href="user-membership.php"><i data-lucide="credit-card"></i> Membership</a>
@@ -430,6 +567,28 @@ const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 let currentMonth = null;
 let currentYear  = null;
 
+// ── Sidebar toggle ─────────────────────────────────────────
+const sidebar        = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const sidebarToggle  = document.getElementById('sidebarToggle');
+
+function openSidebar() {
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+sidebarToggle.addEventListener('click', openSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+sidebar.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+});
+
 // ── Boot ──────────────────────────────────────────────────
 fetchAttendance(null, null);
 
@@ -463,8 +622,6 @@ function fetchAttendance(month, year) {
 function populateMonthDropdown(months, selected) {
     const sel = document.getElementById("monthSelect");
 
-    // Add current month if not in list (no records yet)
-    const currentKey = `${selected.year}-${selected.month}`;
     const exists = months.some(m => m.year === selected.year && m.month === selected.month);
     const allMonths = exists ? months : [
         { year: selected.year, month: selected.month, label: monthName(selected.month) + " " + selected.year },
@@ -544,10 +701,10 @@ function renderHistory(history) {
 
         return `
             <tr>
-                <td style="color:#fff;font-weight:500;">${escHtml(r.date_label)}</td>
-                <td><span class="badge-in">${escHtml(r.time_in)}</span></td>
-                <td>${timeOut}</td>
-                <td>${duration}</td>
+                <td data-label="Date" style="color:#fff;font-weight:500;">${escHtml(r.date_label)}</td>
+                <td data-label="Check In"><span class="badge-in">${escHtml(r.time_in)}</span></td>
+                <td data-label="Check Out">${timeOut}</td>
+                <td data-label="Duration">${duration}</td>
             </tr>`;
     }).join("");
 
@@ -572,32 +729,29 @@ function renderCalendar(heatmap, month, year) {
     const title = document.getElementById("calendarTitle");
     title.textContent = `${monthName(month)} ${year}`;
 
-    const firstDay  = new Date(year, month - 1, 1).getDay(); // 0=Sun
+    const firstDay    = new Date(year, month - 1, 1).getDay();
     const daysInMonth = new Date(year, month, 0).getDate();
-    const todayStr  = new Date().toISOString().slice(0, 10);
+    const todayStr    = new Date().toISOString().slice(0, 10);
 
     let html = `<div class="calendar-grid">`;
 
-    // Day labels
     DAY_LABELS.forEach(d => {
         html += `<div class="cal-day-label">${d}</div>`;
     });
 
-    // Empty cells before first day
     for (let i = 0; i < firstDay; i++) {
         html += `<div class="cal-day empty"></div>`;
     }
 
-    // Day cells
     for (let day = 1; day <= daysInMonth; day++) {
         const dateKey = `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
         const visits  = heatmap[dateKey] || 0;
         const isToday = dateKey === todayStr;
 
         let cls = "cal-day";
-        if (visits === 1)    cls += " visited";
-        if (visits > 1)      cls += " visited-multi";
-        if (isToday)         cls += " today";
+        if (visits === 1) cls += " visited";
+        if (visits > 1)   cls += " visited-multi";
+        if (isToday)      cls += " today";
 
         const tip = visits > 0
             ? `data-tip="${visits} visit${visits > 1 ? "s" : ""}"`
@@ -608,7 +762,6 @@ function renderCalendar(heatmap, month, year) {
 
     html += `</div>`;
 
-    // Legend
     html += `
         <div class="cal-legend">
             <div class="cal-legend-box" style="background:#222;"></div> No visit
