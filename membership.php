@@ -126,6 +126,7 @@ unset($_SESSION["success"], $_SESSION["error"]);
             background: #1a1a1a !important;
         }
 
+        /* ── Badges ── */
         .badge-active {
             background: #28a745;
             color: #fff;
@@ -150,13 +151,22 @@ unset($_SESSION["success"], $_SESSION["error"]);
             font-size: 12px;
         }
 
+        .badge-pending {
+            background: #2a1f00;
+            color: #f59e0b;
+            border: 1px solid #f59e0b44;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
         .empty-row td {
             text-align: center;
             color: #888;
             padding: 30px;
         }
 
-        /* Modal overrides */
+        /* ── Modal overrides ── */
         .modal-content {
             background: #1a1a1a;
             border: 1px solid #ffd700;
@@ -216,6 +226,7 @@ unset($_SESSION["success"], $_SESSION["error"]);
             color: #000;
         }
 
+        /* ── Action buttons ── */
         .btn-edit {
             background: transparent;
             border: 1px solid #ffd700;
@@ -248,6 +259,73 @@ unset($_SESSION["success"], $_SESSION["error"]);
             background: #dc3545;
             color: #fff;
         }
+
+        .btn-approve {
+            background: transparent;
+            border: 1px solid #22c55e;
+            color: #22c55e;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-approve:hover {
+            background: #22c55e;
+            color: #000;
+        }
+
+        .btn-reject {
+            background: transparent;
+            border: 1px solid #f59e0b;
+            color: #f59e0b;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-left: 4px;
+        }
+
+        .btn-reject:hover {
+            background: #f59e0b;
+            color: #000;
+        }
+
+        /* ── Review modal info box ── */
+        .review-info {
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .review-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f1f1f;
+            padding-bottom: 6px;
+        }
+
+        .review-info-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .review-info-label {
+            color: #666;
+        }
+
+        .review-info-value {
+            color: #fff;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -267,9 +345,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
 
 <!-- Main Content -->
 <div class="content">
-<<<<<<< HEAD
-    <h2>MEMBERSHIP</h2>
-=======
 
     <div class="d-flex justify-content-between align-items-center">
         <h2>MEMBERSHIP</h2>
@@ -278,7 +353,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
         </button>
     </div>
     <p>Select an option from the sidebar.</p>
->>>>>>> cb2fcb3e9e720e9cb5b5fcf94bd090df8257168c
 
     <?php if ($success): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -323,43 +397,122 @@ unset($_SESSION["success"], $_SESSION["error"]);
                                 <td><?= htmlspecialchars($ms["start_date"]) ?></td>
                                 <td><?= htmlspecialchars($ms["end_date"]) ?></td>
                                 <td>
-                                    <?php
-                                    $status = strtolower($ms["status"]);
-                                    if ($status === "active"): ?>
+                                    <?php $status = strtolower($ms["status"]); ?>
+                                    <?php if ($status === "active"): ?>
                                         <span class="badge-active">Active</span>
                                     <?php elseif ($status === "expired"): ?>
                                         <span class="badge-expired">Expired</span>
+                                    <?php elseif ($status === "pending"): ?>
+                                        <span class="badge-pending">Pending</span>
                                     <?php else: ?>
                                         <span class="badge-cancelled">Cancelled</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>&#8369;<?= number_format($ms["fee"], 2) ?></td>
                                 <td>
-                                    <button class="btn-edit"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#updateMembershipModal"
-                                        data-id="<?= $ms['id'] ?>"
-                                        data-member_id="<?= $ms['member_id'] ?>"
-                                        data-type="<?= htmlspecialchars($ms['type']) ?>"
-                                        data-start_date="<?= $ms['start_date'] ?>"
-                                        data-end_date="<?= $ms['end_date'] ?>"
-                                        data-status="<?= htmlspecialchars($ms['status']) ?>"
-                                        data-fee="<?= $ms['fee'] ?>">
-                                        <i data-lucide="pencil" style="width:13px;height:13px;"></i> Edit
-                                    </button>
-                                    <button class="btn-delete"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteMembershipModal"
-                                        data-id="<?= $ms['id'] ?>"
-                                        data-member_name="<?= htmlspecialchars($ms['member_name']) ?>">
-                                        <i data-lucide="trash-2" style="width:13px;height:13px;"></i> Delete
-                                    </button>
+                                    <?php if ($status === "pending"): ?>
+                                        <!-- Approve -->
+                                        <button class="btn-approve"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reviewMembershipModal"
+                                            data-id="<?= $ms['id'] ?>"
+                                            data-action="approve"
+                                            data-member_name="<?= htmlspecialchars($ms['member_name']) ?>"
+                                            data-type="<?= htmlspecialchars($ms['type']) ?>"
+                                            data-start_date="<?= $ms['start_date'] ?>"
+                                            data-end_date="<?= $ms['end_date'] ?>"
+                                            data-fee="<?= $ms['fee'] ?>">
+                                            <i data-lucide="check" style="width:13px;height:13px;"></i> Approve
+                                        </button>
+                                        <!-- Reject -->
+                                        <button class="btn-reject"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reviewMembershipModal"
+                                            data-id="<?= $ms['id'] ?>"
+                                            data-action="reject"
+                                            data-member_name="<?= htmlspecialchars($ms['member_name']) ?>"
+                                            data-type="<?= htmlspecialchars($ms['type']) ?>"
+                                            data-start_date="<?= $ms['start_date'] ?>"
+                                            data-end_date="<?= $ms['end_date'] ?>"
+                                            data-fee="<?= $ms['fee'] ?>">
+                                            <i data-lucide="x" style="width:13px;height:13px;"></i> Reject
+                                        </button>
+                                    <?php else: ?>
+                                        <!-- Edit -->
+                                        <button class="btn-edit"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#updateMembershipModal"
+                                            data-id="<?= $ms['id'] ?>"
+                                            data-member_id="<?= $ms['member_id'] ?>"
+                                            data-type="<?= htmlspecialchars($ms['type']) ?>"
+                                            data-start_date="<?= $ms['start_date'] ?>"
+                                            data-end_date="<?= $ms['end_date'] ?>"
+                                            data-status="<?= htmlspecialchars($ms['status']) ?>"
+                                            data-fee="<?= $ms['fee'] ?>">
+                                            <i data-lucide="pencil" style="width:13px;height:13px;"></i> Edit
+                                        </button>
+                                        <!-- Delete -->
+                                        <button class="btn-delete"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteMembershipModal"
+                                            data-id="<?= $ms['id'] ?>"
+                                            data-member_name="<?= htmlspecialchars($ms['member_name']) ?>">
+                                            <i data-lucide="trash-2" style="width:13px;height:13px;"></i> Delete
+                                        </button>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- Review (Approve / Reject) Membership Modal               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="reviewMembershipModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="review_modal_title">Review Membership</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="./controllers/AdminController/review-membership.php" method="POST">
+                <input type="hidden" name="id"     id="review_id">
+                <input type="hidden" name="action" id="review_action">
+                <div class="modal-body">
+                    <p id="review_modal_desc" style="font-size:13px;color:#ccc;margin-bottom:14px;"></p>
+                    <div class="review-info">
+                        <div class="review-info-row">
+                            <span class="review-info-label">Member</span>
+                            <span class="review-info-value" id="review_member_name"></span>
+                        </div>
+                        <div class="review-info-row">
+                            <span class="review-info-label">Plan</span>
+                            <span class="review-info-value" id="review_type"></span>
+                        </div>
+                        <div class="review-info-row">
+                            <span class="review-info-label">Start Date</span>
+                            <span class="review-info-value" id="review_start_date"></span>
+                        </div>
+                        <div class="review-info-row">
+                            <span class="review-info-label">End Date</span>
+                            <span class="review-info-value" id="review_end_date"></span>
+                        </div>
+                        <div class="review-info-row">
+                            <span class="review-info-label">Fee</span>
+                            <span class="review-info-value" id="review_fee"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn" id="review_submit_btn">Confirm</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -502,7 +655,10 @@ unset($_SESSION["success"], $_SESSION["error"]);
             <form action="./controllers/AdminController/delete-membership.php" method="POST">
                 <input type="hidden" name="id" id="delete_id">
                 <div class="modal-body">
-                    <p>Are you sure you want to delete the membership of <strong id="delete_member_name" style="color:#ffd700;"></strong>? This action cannot be undone.</p>
+                    <p>Are you sure you want to delete the membership of
+                        <strong id="delete_member_name" style="color:#ffd700;"></strong>?
+                        This action cannot be undone.
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -517,9 +673,42 @@ unset($_SESSION["success"], $_SESSION["error"]);
 <script>
     lucide.createIcons();
 
-    // Populate update modal
-    const updateModal = document.getElementById("updateMembershipModal");
-    updateModal.addEventListener("show.bs.modal", function (e) {
+    // ── Review (Approve / Reject) modal ──────────────────────
+    document.getElementById("reviewMembershipModal").addEventListener("show.bs.modal", function (e) {
+        const btn    = e.relatedTarget;
+        const action = btn.dataset.action;           // 'approve' | 'reject'
+        const name   = btn.dataset.member_name;
+        const type   = btn.dataset.type;
+
+        document.getElementById("review_id").value     = btn.dataset.id;
+        document.getElementById("review_action").value = action;
+
+        // Info rows
+        document.getElementById("review_member_name").textContent = name;
+        document.getElementById("review_type").textContent        = type;
+        document.getElementById("review_start_date").textContent  = btn.dataset.start_date;
+        document.getElementById("review_end_date").textContent    = btn.dataset.end_date;
+        document.getElementById("review_fee").textContent         = "₱" + parseFloat(btn.dataset.fee).toLocaleString("en-PH", { minimumFractionDigits: 0 });
+
+        const submitBtn = document.getElementById("review_submit_btn");
+
+        if (action === "approve") {
+            document.getElementById("review_modal_title").textContent = "Approve Membership";
+            document.getElementById("review_modal_desc").textContent  =
+                `Approving this request will activate the ${type} plan for ${name}. Any existing active membership will be cancelled automatically.`;
+            submitBtn.textContent  = "Approve";
+            submitBtn.className    = "btn btn-success fw-bold";
+        } else {
+            document.getElementById("review_modal_title").textContent = "Reject Membership";
+            document.getElementById("review_modal_desc").textContent  =
+                `Are you sure you want to reject the ${type} plan request from ${name}? The request will be marked as cancelled.`;
+            submitBtn.textContent  = "Reject";
+            submitBtn.className    = "btn btn-danger fw-bold";
+        }
+    });
+
+    // ── Update modal ─────────────────────────────────────────
+    document.getElementById("updateMembershipModal").addEventListener("show.bs.modal", function (e) {
         const btn = e.relatedTarget;
         document.getElementById("edit_id").value         = btn.dataset.id;
         document.getElementById("edit_member_id").value  = btn.dataset.member_id;
@@ -530,12 +719,11 @@ unset($_SESSION["success"], $_SESSION["error"]);
         document.getElementById("edit_fee").value        = btn.dataset.fee;
     });
 
-    // Populate delete modal
-    const deleteModal = document.getElementById("deleteMembershipModal");
-    deleteModal.addEventListener("show.bs.modal", function (e) {
+    // ── Delete modal ─────────────────────────────────────────
+    document.getElementById("deleteMembershipModal").addEventListener("show.bs.modal", function (e) {
         const btn = e.relatedTarget;
-        document.getElementById("delete_id").value                    = btn.dataset.id;
-        document.getElementById("delete_member_name").textContent     = btn.dataset.member_name;
+        document.getElementById("delete_id").value                = btn.dataset.id;
+        document.getElementById("delete_member_name").textContent = btn.dataset.member_name;
     });
 </script>
 </body>

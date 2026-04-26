@@ -81,7 +81,7 @@ function handleRegister($database) {
     $first_name     = trim($_POST["first_name"]);
     $last_name      = trim($_POST["last_name"]);
     $gender         = trim($_POST["gender"]);
-    $role           = "admin";
+    $role           = "user";
     $birthdate      = trim($_POST["birthdate"]);
     $contact_number = trim($_POST["contact_number"]);
     $email          = trim($_POST["email"]);

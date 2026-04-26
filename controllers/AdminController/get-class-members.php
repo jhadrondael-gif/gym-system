@@ -23,13 +23,15 @@ $connection = $database->connection();
 
 $stmt = $connection->prepare("
     SELECT
-        m.id,
+        e.id,
+        e.status,
         CONCAT(m.first_name, ' ', m.last_name) AS member_name,
         m.email,
         DATE_FORMAT(e.enrolled_at, '%M %d, %Y') AS enrolled_at
     FROM enrollments e
     JOIN members m ON e.member_id = m.id
     WHERE e.class_id = ?
+      AND e.status IN ('approved', 'pending')
     ORDER BY m.first_name ASC
 ");
 $stmt->bind_param("i", $class_id);

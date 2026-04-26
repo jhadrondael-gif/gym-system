@@ -14,6 +14,7 @@ unset($_SESSION["success"], $_SESSION["error"]);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Classes</title>
     <style>
         body {
@@ -23,14 +24,15 @@ unset($_SESSION["success"], $_SESSION["error"]);
             color: #fff;
         }
 
+        /* ── Sidebar ── */
         .sidebar {
             width: 250px;
             height: 100vh;
             background: #0a0a0a;
             border-right: 2px solid #ffd700;
             position: fixed;
+            top: 0; left: 0;
         }
-
         .sidebar h4 {
             text-align: center;
             padding: 20px;
@@ -38,25 +40,18 @@ unset($_SESSION["success"], $_SESSION["error"]);
             font-weight: 600;
             border-bottom: 1px solid #333;
         }
-
         .sidebar a {
             color: #ccc;
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             padding: 14px 20px;
             transition: 0.3s;
         }
-
-        .sidebar a:hover {
-            background: #ffd700;
-            color: #000;
-            padding-left: 25px;
-        }
-
-        .sidebar a.active {
-            background: #ffd700;
-            color: #000;
-        }
+        .sidebar a svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .sidebar a:hover { background: #ffd700; color: #000; padding-left: 25px; }
+        .sidebar a.active { background: #ffd700; color: #000; }
 
         .content {
             margin-left: 250px;
@@ -68,10 +63,10 @@ unset($_SESSION["success"], $_SESSION["error"]);
             font-weight: 600;
         }
 
-        /* Layout: classes list + members panel */
+        /* Layout */
         .classes-layout {
             display: grid;
-            grid-template-columns: 1fr 380px;
+            grid-template-columns: 1fr 400px;
             gap: 20px;
             margin-top: 20px;
             align-items: start;
@@ -108,20 +103,9 @@ unset($_SESSION["success"], $_SESSION["error"]);
             justify-content: space-between;
             align-items: center;
         }
-
-        .class-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .class-row:hover {
-            border-color: #ffd700;
-            background: #1a1a0a;
-        }
-
-        .class-row.active {
-            border-color: #ffd700;
-            background: #1a1a0a;
-        }
+        .class-row:last-child { margin-bottom: 0; }
+        .class-row:hover      { border-color: #ffd700; background: #1a1a0a; }
+        .class-row.active     { border-color: #ffd700; background: #1a1a0a; }
 
         .class-name {
             font-weight: 600;
@@ -137,17 +121,8 @@ unset($_SESSION["success"], $_SESSION["error"]);
             gap: 12px;
             flex-wrap: wrap;
         }
-
-        .class-meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .class-meta svg {
-            width: 12px;
-            height: 12px;
-        }
+        .class-meta span { display: flex; align-items: center; gap: 4px; }
+        .class-meta svg  { width: 12px; height: 12px; }
 
         .enrolled-badge {
             background: #ffd700;
@@ -160,6 +135,19 @@ unset($_SESSION["success"], $_SESSION["error"]);
             flex-shrink: 0;
         }
 
+        /* pending count pill on class row */
+        .pending-pill {
+            background: #2a1f00;
+            color: #f59e0b;
+            border: 1px solid #f59e0b55;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 20px;
+            padding: 2px 8px;
+            margin-left: 6px;
+            white-space: nowrap;
+        }
+
         .empty-classes {
             text-align: center;
             color: #555;
@@ -168,17 +156,46 @@ unset($_SESSION["success"], $_SESSION["error"]);
         }
 
         /* Members panel */
-        .members-panel {
-            position: sticky;
-            top: 30px;
+        .members-panel { position: sticky; top: 30px; }
+
+        /* Tab bar */
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid #2a2a2a;
+            margin-bottom: 14px;
+            gap: 0;
+        }
+        .panel-tab {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: 0.2s;
+            user-select: none;
+        }
+        .panel-tab:hover { color: #ccc; }
+        .panel-tab.active-tab {
+            color: #ffd700;
+            border-bottom-color: #ffd700;
+        }
+        .panel-tab .tab-count {
+            display: inline-block;
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 1px 6px;
+            font-size: 10px;
+            margin-left: 4px;
+        }
+        .panel-tab.active-tab .tab-count {
+            background: #2a1f00;
+            color: #f59e0b;
         }
 
-        .members-panel .card-title span {
-            font-size: 13px;
-            color: #888;
-            font-weight: 400;
-        }
-
+        /* Member item */
         .member-item {
             display: flex;
             align-items: center;
@@ -186,10 +203,7 @@ unset($_SESSION["success"], $_SESSION["error"]);
             padding: 10px 0;
             border-bottom: 1px solid #222;
         }
-
-        .member-item:last-child {
-            border-bottom: none;
-        }
+        .member-item:last-child { border-bottom: none; }
 
         .member-avatar {
             width: 36px;
@@ -205,25 +219,100 @@ unset($_SESSION["success"], $_SESSION["error"]);
             flex-shrink: 0;
         }
 
-        .member-info .name {
-            font-size: 14px;
-            font-weight: 500;
-            color: #fff;
-        }
+        .member-info .name  { font-size: 14px; font-weight: 500; color: #fff; }
+        .member-info .since { font-size: 11px; color: #666; margin-top: 1px; }
 
-        .member-info .since {
-            font-size: 11px;
-            color: #666;
-            margin-top: 1px;
+        /* Pending member item */
+        .pending-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #222;
         }
+        .pending-item:last-child { border-bottom: none; }
 
-        .panel-empty {
-            text-align: center;
-            color: #555;
-            padding: 40px 0;
+        .pending-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #2a1f00;
+            border: 1px solid #f59e0b55;
+            color: #f59e0b;
+            font-weight: 700;
             font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
+        .pending-info        { flex: 1; min-width: 0; }
+        .pending-info .name  { font-size: 13px; font-weight: 500; color: #fff; }
+        .pending-info .since { font-size: 11px; color: #666; margin-top: 1px; }
+
+        .pending-actions { display: flex; gap: 5px; flex-shrink: 0; }
+
+        .btn-approve-sm {
+            background: transparent;
+            border: 1px solid #22c55e;
+            color: #22c55e;
+            padding: 3px 9px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .btn-approve-sm svg { width: 11px; height: 11px; }
+        .btn-approve-sm:hover { background: #22c55e; color: #000; }
+
+        .btn-reject-sm {
+            background: transparent;
+            border: 1px solid #f59e0b;
+            color: #f59e0b;
+            padding: 3px 9px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .btn-reject-sm svg { width: 11px; height: 11px; }
+        .btn-reject-sm:hover { background: #f59e0b; color: #000; }
+
+        /* Toast */
+        .toast-bar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 13px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .toast-bar.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast-bar.toast-success { border-color: #22c55e55; color: #22c55e; }
+        .toast-bar.toast-error   { border-color: #ef444455; color: #ef4444; }
+
+        /* Misc panel states */
         .panel-placeholder {
             text-align: center;
             color: #444;
@@ -231,12 +320,13 @@ unset($_SESSION["success"], $_SESSION["error"]);
             font-size: 13px;
             line-height: 1.8;
         }
+        .panel-placeholder svg { width: 32px; height: 32px; color: #333; margin-bottom: 10px; }
 
-        .panel-placeholder svg {
-            width: 32px;
-            height: 32px;
-            color: #333;
-            margin-bottom: 10px;
+        .panel-empty {
+            text-align: center;
+            color: #555;
+            padding: 30px 0;
+            font-size: 13px;
         }
 
         .loading-text {
@@ -245,6 +335,19 @@ unset($_SESSION["success"], $_SESSION["error"]);
             padding: 40px 0;
             font-size: 13px;
         }
+
+        /* Search */
+        .panel-search {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 7px 12px;
+            color: #fff;
+            font-size: 13px;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        .panel-search:focus { outline: none; border-color: #ffd700; }
 
         /* Action buttons */
         .btn-gold {
@@ -261,7 +364,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
             align-items: center;
             gap: 6px;
         }
-
         .btn-gold:hover { background: #e6c200; }
 
         .btn-edit {
@@ -274,7 +376,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
             cursor: pointer;
             transition: 0.2s;
         }
-
         .btn-edit:hover { background: #ffd700; color: #000; }
 
         .btn-delete {
@@ -288,14 +389,9 @@ unset($_SESSION["success"], $_SESSION["error"]);
             transition: 0.2s;
             margin-left: 4px;
         }
-
         .btn-delete:hover { background: #dc3545; color: #fff; }
 
-        .class-actions {
-            display: flex;
-            gap: 4px;
-            margin-top: 8px;
-        }
+        .class-actions { display: flex; gap: 4px; margin-top: 8px; }
 
         /* Modal */
         .modal-content {
@@ -303,60 +399,24 @@ unset($_SESSION["success"], $_SESSION["error"]);
             border: 1px solid #ffd700;
             color: #fff;
         }
-
         .modal-header { border-bottom: 1px solid #333; }
-        .modal-footer { border-top: 1px solid #333; }
+        .modal-footer { border-top:   1px solid #333; }
+        .modal-title  { color: #ffd700; font-weight: 600; }
+        .btn-close    { filter: invert(1); }
 
-        .modal-title {
-            color: #ffd700;
-            font-weight: 600;
+        .form-label { color: #ccc; font-size: 14px; }
+        .form-control, .form-select {
+            background: #111; border: 1px solid #444; color: #fff;
         }
-
-        .btn-close { filter: invert(1); }
-
-        .form-label {
-            color: #ccc;
-            font-size: 14px;
+        .form-control:focus, .form-select:focus {
+            background: #111; border-color: #ffd700; color: #fff;
+            box-shadow: 0 0 0 0.2rem rgba(255,215,0,0.2);
         }
-
-        .form-control,
-        .form-select {
-            background: #111;
-            border: 1px solid #444;
-            color: #fff;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            background: #111;
-            border-color: #ffd700;
-            color: #fff;
-            box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.2);
-        }
-
         .form-select option { background: #1a1a1a; }
-
         textarea.form-control { resize: vertical; min-height: 80px; }
-
-        /* Search in panel */
-        .panel-search {
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 6px;
-            padding: 7px 12px;
-            color: #fff;
-            font-size: 13px;
-            width: 100%;
-            margin-bottom: 12px;
-        }
-
-        .panel-search:focus {
-            outline: none;
-            border-color: #ffd700;
-        }
     </style>
 </head>
-<body>
+<>
 
 <!-- Sidebar -->
 <div class="sidebar">
@@ -372,10 +432,6 @@ unset($_SESSION["success"], $_SESSION["error"]);
 
 <!-- Main Content -->
 <div class="content">
-<<<<<<< HEAD
-    <h2>Classes</h2>
-
-=======
 
     <div class="d-flex justify-content-between align-items-center">
         <div>
@@ -422,10 +478,15 @@ unset($_SESSION["success"], $_SESSION["error"]);
                          id="class-row-<?= $class['id'] ?>"
                          onclick="loadMembers(<?= $class['id'] ?>, '<?= htmlspecialchars(addslashes($class['name'])) ?>', <?= $class['enrolled_count'] ?>)">
                         <div style="flex:1;min-width:0;">
-                            <div class="class-name"><?= htmlspecialchars($class['name']) ?></div>
+                            <div class="class-name">
+                                <?= htmlspecialchars($class['name']) ?>
+                                <?php if (!empty($class['pending_count']) && $class['pending_count'] > 0): ?>
+                                    <span class="pending-pill"><?= $class['pending_count'] ?> pending</span>
+                                <?php endif; ?>
+                            </div>
                             <div class="class-meta">
                                 <span>
-                                    <i data-lucide="user" ></i>
+                                    <i data-lucide="user"></i>
                                     <?= htmlspecialchars($class['instructor']) ?>
                                 </span>
                                 <span>
@@ -477,6 +538,16 @@ unset($_SESSION["success"], $_SESSION["error"]);
                     <span id="panelTitle">Enrolled Members</span>
                 </div>
 
+                <!-- Tab bar (hidden until a class is selected) -->
+                <div class="panel-tabs" id="panelTabs" style="display:none;">
+                    <div class="panel-tab active-tab" id="tab-enrolled" onclick="switchTab('enrolled')">
+                        Enrolled <span class="tab-count" id="count-enrolled">0</span>
+                    </div>
+                    <div class="panel-tab" id="tab-pending" onclick="switchTab('pending')">
+                        Pending <span class="tab-count" id="count-pending">0</span>
+                    </div>
+                </div>
+
                 <div id="panelContent">
                     <div class="panel-placeholder">
                         <i data-lucide="mouse-pointer-click"></i>
@@ -487,8 +558,10 @@ unset($_SESSION["success"], $_SESSION["error"]);
         </div>
 
     </div>
->>>>>>> cb2fcb3e9e720e9cb5b5fcf94bd090df8257168c
 </div>
+
+<!-- Toast notification -->
+<div class="toast-bar" id="toastBar"></div>
 
 <!-- Create Class Modal -->
 <div class="modal fade" id="createClassModal" tabindex="-1" aria-hidden="true">
@@ -513,13 +586,8 @@ unset($_SESSION["success"], $_SESSION["error"]);
                             <label class="form-label">Day</label>
                             <select name="day" class="form-select" required>
                                 <option value="" disabled selected>Select day</option>
-                                <option>Monday</option>
-                                <option>Tuesday</option>
-                                <option>Wednesday</option>
-                                <option>Thursday</option>
-                                <option>Friday</option>
-                                <option>Saturday</option>
-                                <option>Sunday</option>
+                                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                                <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -565,13 +633,8 @@ unset($_SESSION["success"], $_SESSION["error"]);
                             <label class="form-label">Day</label>
                             <select name="day" id="edit_day" class="form-select" required>
                                 <option value="" disabled>Select day</option>
-                                <option>Monday</option>
-                                <option>Tuesday</option>
-                                <option>Wednesday</option>
-                                <option>Thursday</option>
-                                <option>Friday</option>
-                                <option>Saturday</option>
-                                <option>Sunday</option>
+                                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                                <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -617,129 +680,283 @@ unset($_SESSION["success"], $_SESSION["error"]);
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    lucide.createIcons();
+lucide.createIcons();
 
-    let activeClassId   = null;
-    let allMembersCache = [];
+// ── State ─────────────────────────────────────────────────
+let activeClassId   = null;
+let activeClassName = "";
+let enrolledCache   = [];
+let pendingCache    = [];
+let currentTab      = "enrolled";
 
-    // Load enrolled members for a class
-    function loadMembers(classId, className, count) {
-        // Highlight active row
-        document.querySelectorAll(".class-row").forEach(r => r.classList.remove("active"));
-        document.getElementById("class-row-" + classId).classList.add("active");
+// ── Load members for a class ─────────────────────────────
+function loadMembers(classId, className, count) {
+    document.querySelectorAll(".class-row").forEach(r => r.classList.remove("active"));
+    document.getElementById("class-row-" + classId).classList.add("active");
 
-        activeClassId = classId;
+    activeClassId   = classId;
+    activeClassName = className;
+    currentTab      = "enrolled";
 
-        document.getElementById("panelTitle").textContent =
-            className + " (" + count + ")";
+    document.getElementById("panelTitle").textContent = className;
+    document.getElementById("panelTabs").style.display = "flex";
+    document.getElementById("panelContent").innerHTML =
+        `<div class="loading-text">Loading...</div>`;
 
-        document.getElementById("panelContent").innerHTML =
-            `<div class="loading-text">Loading...</div>`;
+    fetch(`./controllers/AdminController/get-class-members.php?class_id=${classId}`)
+        .then(r => r.json())
+        .then(data => {
+            const all = data.data || [];
 
-        fetch(`./controllers/AdminController/get-class-members.php?class_id=${classId}`)
-            .then(r => r.json())
-            .then(data => {
-                allMembersCache = data.data || [];
-                renderMembers(allMembersCache);
-            })
-            .catch(() => {
-                document.getElementById("panelContent").innerHTML =
-                    `<div class="panel-empty">Failed to load members.</div>`;
-            });
-    }
+            // ✅ KEY FIX: split by status field returned from the DB
+            enrolledCache = all.filter(m => m.status === "approved");
+            pendingCache  = all.filter(m => m.status === "pending");
 
-    function renderMembers(members) {
-        const container = document.getElementById("panelContent");
-
-        if (members.length === 0) {
-            container.innerHTML = `
-                <div class="panel-empty">
-                    <i data-lucide="user-x" style="width:24px;height:24px;color:#333;display:block;margin:0 auto 8px;"></i>
-                    No members enrolled in this class.
-                </div>`;
-            lucide.createIcons();
-            return;
-        }
-
-        let html = `<input
-            type="text"
-            class="panel-search"
-            placeholder="Search members..."
-            oninput="filterMembers(this.value)"
-        >`;
-
-        html += `<div id="membersList">`;
-        members.forEach(m => {
-            const initials = m.member_name.split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
-            html += `
-                <div class="member-item">
-                    <div class="member-avatar">${initials}</div>
-                    <div class="member-info">
-                        <div class="name">${escapeHtml(m.member_name)}</div>
-                        <div class="since">Enrolled ${escapeHtml(m.enrolled_at)}</div>
-                    </div>
-                </div>`;
+            updateTabCounts();
+            setActiveTab("enrolled");
+            renderTab();
+        })
+        .catch(() => {
+            document.getElementById("panelContent").innerHTML =
+                `<div class="panel-empty">Failed to load members.</div>`;
         });
-        html += `</div>`;
+}
 
-        container.innerHTML = html;
+// ── Tab switching ─────────────────────────────────────────
+function switchTab(tab) {
+    currentTab = tab;
+    setActiveTab(tab);
+    renderTab();
+}
+
+function setActiveTab(tab) {
+    document.querySelectorAll(".panel-tab").forEach(t => t.classList.remove("active-tab"));
+    document.getElementById("tab-" + tab).classList.add("active-tab");
+}
+
+function updateTabCounts() {
+    document.getElementById("count-enrolled").textContent = enrolledCache.length;
+    document.getElementById("count-pending").textContent  = pendingCache.length;
+}
+
+// ── Render current tab ────────────────────────────────────
+function renderTab() {
+    if (currentTab === "enrolled") {
+        renderEnrolled(enrolledCache);
+    } else {
+        renderPending(pendingCache);
+    }
+}
+
+// ── Enrolled tab ──────────────────────────────────────────
+function renderEnrolled(members) {
+    const container = document.getElementById("panelContent");
+
+    if (members.length === 0) {
+        container.innerHTML = `
+            <div class="panel-empty">
+                <i data-lucide="user-x" style="width:24px;height:24px;color:#333;display:block;margin:0 auto 8px;"></i>
+                No active members in this class.
+            </div>`;
         lucide.createIcons();
+        return;
     }
 
-    function filterMembers(query) {
-        const q       = query.toLowerCase();
-        const filtered = allMembersCache.filter(m =>
-            m.member_name.toLowerCase().includes(q)
-        );
+    let html = `<input type="text" class="panel-search" placeholder="Search enrolled members..."
+                    oninput="filterEnrolled(this.value)">`;
+    html += `<div id="membersList">`;
+    members.forEach(m => {
+        const initials = getInitials(m.member_name);
+        html += `
+            <div class="member-item">
+                <div class="member-avatar">${initials}</div>
+                <div class="member-info">
+                    <div class="name">${escapeHtml(m.member_name)}</div>
+                    <div class="since">Enrolled ${escapeHtml(m.enrolled_at)}</div>
+                </div>
+            </div>`;
+    });
+    html += `</div>`;
 
-        const list = document.getElementById("membersList");
-        if (!list) return;
+    container.innerHTML = html;
+    lucide.createIcons();
+}
 
-        if (filtered.length === 0) {
-            list.innerHTML = `<div style="text-align:center;color:#555;padding:20px;font-size:13px;">No results found.</div>`;
-            return;
+function filterEnrolled(query) {
+    const q        = query.toLowerCase();
+    const filtered = enrolledCache.filter(m => m.member_name.toLowerCase().includes(q));
+    const list     = document.getElementById("membersList");
+    if (!list) return;
+
+    if (filtered.length === 0) {
+        list.innerHTML = `<div style="text-align:center;color:#555;padding:20px;font-size:13px;">No results.</div>`;
+        return;
+    }
+
+    list.innerHTML = filtered.map(m => {
+        const initials = getInitials(m.member_name);
+        return `
+            <div class="member-item">
+                <div class="member-avatar">${initials}</div>
+                <div class="member-info">
+                    <div class="name">${escapeHtml(m.member_name)}</div>
+                    <div class="since">Enrolled ${escapeHtml(m.enrolled_at)}</div>
+                </div>
+            </div>`;
+    }).join("");
+}
+
+// ── Pending tab ───────────────────────────────────────────
+function renderPending(members) {
+    const container = document.getElementById("panelContent");
+
+    if (members.length === 0) {
+        container.innerHTML = `
+            <div class="panel-empty">
+                <i data-lucide="check-circle" style="width:24px;height:24px;color:#333;display:block;margin:0 auto 8px;"></i>
+                No pending requests.
+            </div>`;
+        lucide.createIcons();
+        return;
+    }
+
+    let html = `<div id="pendingList">`;
+    members.forEach(m => {
+        const initials = getInitials(m.member_name);
+        html += `
+            <div class="pending-item" id="pending-item-${m.id}">
+                <div class="pending-avatar">${initials}</div>
+                <div class="pending-info">
+                    <div class="name">${escapeHtml(m.member_name)}</div>
+                    <div class="since">Requested ${escapeHtml(m.enrolled_at)}</div>
+                </div>
+                <div class="pending-actions">
+                    <button class="btn-approve-sm" onclick="reviewEnrollment(${m.id}, 'approve')">
+                        <i data-lucide="check"></i> Approve
+                    </button>
+                    <button class="btn-reject-sm" onclick="reviewEnrollment(${m.id}, 'reject')">
+                        <i data-lucide="x"></i> Reject
+                    </button>
+                </div>
+            </div>`;
+    });
+    html += `</div>`;
+
+    container.innerHTML = html;
+    lucide.createIcons();
+}
+
+// ── Review enrollment (AJAX) ──────────────────────────────
+function reviewEnrollment(enrollmentId, action) {
+    const item = document.getElementById("pending-item-" + enrollmentId);
+    if (item) {
+        item.style.opacity       = "0.4";
+        item.style.pointerEvents = "none";
+    }
+
+    const formData = new FormData();
+    formData.append("id",     enrollmentId);
+    formData.append("action", action);
+
+    fetch("./controllers/AdminController/review-enrollment.php", {
+        method: "POST",
+        body:   formData,
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // Remove from pendingCache
+            const idx = pendingCache.findIndex(m => m.id == enrollmentId);
+            if (idx !== -1) {
+                const [member] = pendingCache.splice(idx, 1);
+
+                // ✅ Only move to enrolled if approved
+                if (action === "approve") {
+                    member.status = "approved";
+                    enrolledCache.push(member);
+                }
+                // If rejected — member is just removed from pending, gone from both lists
+            }
+
+            updateTabCounts();
+            updateClassRowPill(activeClassId, pendingCache.length);
+
+            // Re-render the pending tab (stay on it so admin can keep reviewing)
+            renderTab();
+
+            showToast(data.message, "success");
+        } else {
+            if (item) { item.style.opacity = "1"; item.style.pointerEvents = ""; }
+            showToast(data.message || "Something went wrong.", "error");
         }
-
-        list.innerHTML = filtered.map(m => {
-            const initials = m.member_name.split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
-            return `
-                <div class="member-item">
-                    <div class="member-avatar">${initials}</div>
-                    <div class="member-info">
-                        <div class="name">${escapeHtml(m.member_name)}</div>
-                        <div class="since">Enrolled ${escapeHtml(m.enrolled_at)}</div>
-                    </div>
-                </div>`;
-        }).join("");
-    }
-
-    function escapeHtml(str) {
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;");
-    }
-
-    // Populate update modal
-    const updateModal = document.getElementById("updateClassModal");
-    updateModal.addEventListener("show.bs.modal", function(e) {
-        const btn = e.relatedTarget;
-        document.getElementById("edit_id").value          = btn.dataset.id;
-        document.getElementById("edit_name").value        = btn.dataset.name;
-        document.getElementById("edit_instructor").value  = btn.dataset.instructor;
-        document.getElementById("edit_description").value = btn.dataset.description;
-        document.getElementById("edit_day").value         = btn.dataset.day;
-        document.getElementById("edit_time").value        = btn.dataset.time;
+    })
+    .catch(() => {
+        if (item) { item.style.opacity = "1"; item.style.pointerEvents = ""; }
+        showToast("Network error. Please try again.", "error");
     });
+}
 
-    // Populate delete modal
-    const deleteModal = document.getElementById("deleteClassModal");
-    deleteModal.addEventListener("show.bs.modal", function(e) {
-        const btn = e.relatedTarget;
-        document.getElementById("delete_id").value       = btn.dataset.id;
-        document.getElementById("delete_name").textContent = btn.dataset.name;
-    });
+// ── Update the pending pill on the class row ──────────────
+function updateClassRowPill(classId, pendingCount) {
+    const row = document.getElementById("class-row-" + classId);
+    if (!row) return;
+
+    const nameEl = row.querySelector(".class-name");
+    let   pill   = nameEl.querySelector(".pending-pill");
+
+    if (pendingCount > 0) {
+        if (!pill) {
+            pill = document.createElement("span");
+            pill.className = "pending-pill";
+            nameEl.appendChild(pill);
+        }
+        pill.textContent = pendingCount + " pending";
+    } else if (pill) {
+        pill.remove();
+    }
+}
+
+// ── Toast ─────────────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg, type = "success") {
+    const bar   = document.getElementById("toastBar");
+    bar.textContent = msg;
+    bar.className   = `toast-bar toast-${type} show`;
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => bar.classList.remove("show"), 3500);
+}
+
+// ── Helpers ───────────────────────────────────────────────
+function getInitials(name) {
+    return String(name).split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
+}
+
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g,  "&amp;")
+        .replace(/</g,  "&lt;")
+        .replace(/>/g,  "&gt;")
+        .replace(/"/g,  "&quot;")
+        .replace(/'/g,  "&#39;");
+}
+
+// ── Modal population ──────────────────────────────────────
+document.getElementById("updateClassModal").addEventListener("show.bs.modal", function(e) {
+    const btn = e.relatedTarget;
+    document.getElementById("edit_id").value          = btn.dataset.id;
+    document.getElementById("edit_name").value        = btn.dataset.name;
+    document.getElementById("edit_instructor").value  = btn.dataset.instructor;
+    document.getElementById("edit_description").value = btn.dataset.description;
+    document.getElementById("edit_day").value         = btn.dataset.day;
+    document.getElementById("edit_time").value        = btn.dataset.time;
+});
+
+document.getElementById("deleteClassModal").addEventListener("show.bs.modal", function(e) {
+    const btn = e.relatedTarget;
+    document.getElementById("delete_id").value         = btn.dataset.id;
+    document.getElementById("delete_name").textContent = btn.dataset.name;
+});
 </script>
 </body>
 </html>

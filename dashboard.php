@@ -215,13 +215,8 @@
 
 <!-- Main Content -->
 <div class="content">
-<<<<<<< HEAD
-    <h2>Welcome to Dashboard</h2>
-    
-=======
     <h2>DASHBOARD</h2>
     <p>Welcome back — <?= date('l, F j, Y') ?></p>
->>>>>>> cb2fcb3e9e720e9cb5b5fcf94bd090df8257168c
 
     <!-- Stat Cards -->
     <div class="stats-grid">
